@@ -2,7 +2,7 @@
 
 Bu proje mevcut `index.html` uygulamasını çevrimdışı çalışan bir Android WebView içinde açar.
 
-Android'in durum ve gezinme çubukları için güvenli alan bırakılır; uygulamanın üst ve alt düğmeleri sistem çubuklarının altında kalmaz. `kelimelerim.png` uygulama simgesi olarak kullanılır.
+WebView'in yüksekliği Android'in üst durum çubuğu ile alt gezinme çubuğu arasında kalan gerçek kullanılabilir alanla sınırlandırılır. Uygulama bu bantların altına sarkmaz. `kelimelerim.png` uygulama simgesi olarak kullanılır.
 
 ## Fiziksel tuşlar
 

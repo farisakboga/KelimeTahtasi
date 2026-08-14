@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
 public class MainActivity extends Activity {
     private WebView webView;
+    private FrameLayout rootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +28,11 @@ public class MainActivity extends Activity {
         webView.setWebChromeClient(new WebChromeClient());
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
-        // Android 15 ve üzerindeki kenardan kenara yerleşimde içeriğin
-        // durum ve gezinme çubuklarının altında kalmasını engeller.
-        webView.setOnApplyWindowInsetsListener((view, windowInsets) -> {
+        // Sistem çubuklarının kapladığı alanı ana kapsayıcıdan düşürür.
+        // Böylece WebView'in gerçek ölçüsü yalnızca kullanılabilir alan olur;
+        // HTML'deki 100dvh yüksekliğine fazladan boşluk eklenmez.
+        rootLayout = new FrameLayout(this);
+        rootLayout.setOnApplyWindowInsetsListener((view, windowInsets) -> {
             int topInset;
             int bottomInset;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -51,8 +56,12 @@ public class MainActivity extends Activity {
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
 
-        setContentView(webView);
-        webView.requestApplyInsets();
+        rootLayout.addView(webView, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        setContentView(rootLayout);
+        rootLayout.requestApplyInsets();
         webView.loadUrl("file:///android_asset/index.html");
     }
 
