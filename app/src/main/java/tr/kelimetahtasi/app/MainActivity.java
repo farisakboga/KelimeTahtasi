@@ -2,8 +2,10 @@ package tr.kelimetahtasi.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -23,6 +25,25 @@ public class MainActivity extends Activity {
         webView.setWebChromeClient(new WebChromeClient());
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
+        // Android 15 ve üzerindeki kenardan kenara yerleşimde içeriğin
+        // durum ve gezinme çubuklarının altında kalmasını engeller.
+        webView.setOnApplyWindowInsetsListener((view, windowInsets) -> {
+            int topInset;
+            int bottomInset;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                android.graphics.Insets systemBars = windowInsets.getInsets(
+                        WindowInsets.Type.systemBars()
+                );
+                topInset = systemBars.top;
+                bottomInset = systemBars.bottom;
+            } else {
+                topInset = windowInsets.getSystemWindowInsetTop();
+                bottomInset = windowInsets.getSystemWindowInsetBottom();
+            }
+            view.setPadding(0, topInset, 0, bottomInset);
+            return windowInsets;
+        });
+
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -31,6 +52,7 @@ public class MainActivity extends Activity {
         settings.setDisplayZoomControls(false);
 
         setContentView(webView);
+        webView.requestApplyInsets();
         webView.loadUrl("file:///android_asset/index.html");
     }
 

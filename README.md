@@ -2,6 +2,8 @@
 
 Bu proje mevcut `index.html` uygulamasını çevrimdışı çalışan bir Android WebView içinde açar.
 
+Android'in durum ve gezinme çubukları için güvenli alan bırakılır; uygulamanın üst ve alt düğmeleri sistem çubuklarının altında kalmaz. `kelimelerim.png` uygulama simgesi olarak kullanılır.
+
 ## Fiziksel tuşlar
 
 - Ses kısma: sonraki kelime
